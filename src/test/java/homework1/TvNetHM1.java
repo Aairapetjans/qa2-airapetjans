@@ -41,7 +41,7 @@ public class TvNetHM1 {
     }
 
     @Test
-    public void tvNetHeaderTest() throws InterruptedException {
+    public void tvNetHeaderTest(){
         List<WebElement> articles = driver.findElements(ARTICLE);
         WebElement homePageArticle = articles.get(1);
         String homePageArticleTitleFull = homePageArticle.findElement(ARTICLE_NAME_HOME_PAGE).getText();
