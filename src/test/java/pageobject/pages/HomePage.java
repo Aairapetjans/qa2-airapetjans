@@ -1,0 +1,58 @@
+package pageobject.pages;
+
+import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import pageobject.core.BaseFunc;
+import pageobject.models.Article;
+
+import java.util.List;
+import java.util.logging.Logger;
+
+public class HomePage {
+    private final By ACCEPT_COOKIES_BTN = By.xpath(".//button[@mode = 'primary']");
+    private final By COMMENTS_COUNT = By.xpath(".//span[contains(@class, 'article__comment')]");
+    private final By ARTICLE = By.tagName("article");
+
+    private final Logger LOGGER = Logger.getLogger(String.valueOf(this.getClass()));
+    private BaseFunc baseFunc;
+
+
+    public HomePage(BaseFunc baseFunc) {
+        this.baseFunc = baseFunc;
+    }
+
+    public void acceptCookies(){
+            baseFunc.click(ACCEPT_COOKIES_BTN);
+
+    }
+
+    public void getArticleById(int articleNr){
+       List<WebElement> articlesElements = baseFunc.findElements(ARTICLE);
+       Assertions.assertFalse(articlesElements.isEmpty(), "There are no articles!");
+
+       WebElement currentArticle = articlesElements.get(articleNr - 1);
+        mapArticle(currentArticle);
+    }
+
+    // WebElement --> Article
+        private Article mapArticle(WebElement we) {
+            Article article = new Article();
+
+            List<WebElement> counters = baseFunc.findElements(we, COMMENTS_COUNT);
+            Assertions.assertTrue(counters.size() >= 1, "There is more than 1 counter");
+
+            if (baseFunc.findElements(we, COMMENTS_COUNT).isEmpty()){
+                article.setCommentsCount(0);
+            } else {
+
+             //   WebElement counter = counters.get(0); // -> (36) :: WebElement
+                article.setCommentsCount(counters.get(0));
+            }
+
+
+            return article;
+
+        }
+}
+
